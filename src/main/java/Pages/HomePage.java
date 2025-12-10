@@ -10,7 +10,7 @@ public HomePage(Page page){
 	this.page = page; }
 
 public void Activeone() throws InterruptedException  {
-	page.locator("//span[@class='MuiBox-root jss178']").click();
+	page.locator("//span[normalize-space()='Activ One']").click();
 	
 	int times = 3;
 	Locator element = page.locator("//span[contains(text(),'Next')]");
