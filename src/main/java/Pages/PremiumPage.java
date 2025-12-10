@@ -1,12 +1,9 @@
 package Pages;
 
 import java.io.IOException;
-
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-
 import Utils.DataReporting;
 
 public class PremiumPage {
@@ -24,7 +21,6 @@ public class PremiumPage {
 	public void Premiumvalidation() throws InterruptedException, IOException {
     Locator CoverageAmounts = page.locator("//div[contains(@class,'mantine-Slider-root')]").first();
 	
-   
 	System.out.print("Coverage amounts are "+CoverageAmounts.innerText());
 	
 	excel.writecell(4, 1, String.valueOf(CoverageAmounts.innerText()));
@@ -57,27 +53,28 @@ public class PremiumPage {
 		if(Addons[i]=="Chronic Care" || Addons[i]== "Chronic Management Program (OPD)") {
 			
 			page.locator("//input[@type='checkbox' and contains(@class,'mantine-Checkbox-input')]").nth(10).click();
-			  
-			if(Addons[i]=="Chronic Care") {	
+		
 			String [] dieases= {"Diabetes","Hypertension","Asthma"};
 			
 			for(int m=0;m<dieases.length;m++) {
 			   String diesesButton ="//span[normalize-space()='"+dieases[m]+"']";
 			   page.locator(diesesButton).click();
 			}   
-			   	   
-		}
 			page.locator("//span[text()='Confirm']").click();	
 		}
 		
-		String PremiumAfterAddon = page.locator("//span[contains(text(),'Total Premium')]/following-sibling::span").innerText();
+		String Premium = page.locator("//span[contains(text(),'Total Premium')]/following-sibling::span").innerText();
 		
-		if(totalPremium.equals(PremiumAfterAddon)) {
+		if(totalPremium.equals(Premium)) {
 			System.out.println("Total premium is same even after adding addon");
 		}
 		else {
-			System.out.println("Total premium is changed after adding addon "+PremiumAfterAddon);
-			excel.writecell(8, j, PremiumAfterAddon);
+			System.out.println("Total premium is changed after adding addon "+Addons[i]+" " + Premium);
+			excel.writecell(8, j, Premium);
+			page.locator(DynamicAddon).first().click();
+			Premium = page.locator("//span[contains(text(),'Total Premium')]/following-sibling::span").innerText();
+			System.out.println("Total premium is changed after Removing addon "+Addons[i]+" " + Premium);
+			excel.writecell(9, j, Premium);
 		}
       }
 	
